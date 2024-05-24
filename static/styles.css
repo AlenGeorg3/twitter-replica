@@ -1,0 +1,79 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F5F8FA;
+    color: #F5F8FA;
+}
+
+.custom-bg {
+    background-color: #1DA1F2;
+    color: #F5F8FA;
+}
+
+.custom-btn {
+    background-color: #657786;
+    color: #F5F8FA;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.custom-btn:hover {
+    color: #F5F8FA;
+
+    background-color: #1DA1F2;
+}
+
+.custom-btn-save {
+    background-color: #657786;
+    color: #F5F8FA;
+    width: 100%;
+}
+
+.custom-btn-save:hover {
+    color: #F5F8FA;
+
+    background-color: #1DA1F2;
+}
+
+.custom-btn-edit {
+    background-color: #657786;
+    color: #F5F8FA;
+    padding: 1px 26px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.custom-btn-edit:hover {
+    color: #F5F8FA;
+
+    background-color: #1DA1F2;
+}
+
+.custom-error {
+    color: #ff3336;
+    background-color: #ff3336;
+}
+
+.form-floating {
+    margin-bottom: 8px;
+}
+
+.login-box,
+.sign-out {
+    max-width: 400px;
+    margin: auto;
+    padding: 15px;
+    border: 1px solid #657786;
+    border-radius: 10px;
+    background-color: #F5F8FA;
+}
+
+.login-box h1,
+.sign-out h1 {
+    text-align: center;
+    color: #14171A;
+}
+
+.btn-outline-custom {
+    border-color: #F5F8FA;
+}

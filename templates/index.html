@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    {% if not username %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header custom-bg">
+                        Set Your Username
+                    </div>
+                    <div class="card-body">
+                        <form action="/set-username" method="POST">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" autofocus=""
+                                    required pattern="^[a-zA-Z\-][a-zA-Z0-9\-]{0,11}$">
+                            </div>
+                            <button type="submit" class="btn custom-btn" style="width: 100px;">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <nav class="navbar navbar-expand-lg custom-bg">
+        <a class="navbar-brand custom-bg" style="margin-left: 10px;" href="/">Twitter</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link custom-bg" href="/search">Search <i style="margin:5px; margin-right: 10px"
+                                class="bi bi-search"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link custom-bg" href="/profile">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card rounded-3">
+                    <div class="card-header custom-bg">
+                        Hello {{ username }}, what's on your mind?
+                    </div>
+                    <div class="card-body">
+                        <form action="/submit-post" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <input id="username" name="username" hidden="" value={{username}}>
+                                <textarea class="form-control" id="post" name="post" rows="3" maxlength="140" required
+                                    autofocus="" placeholder="Tweet your thoughts..."></textarea>
+                                <small id="postHelp" class="form-text text-muted">Limit: 140 characters</small>
+                            </div>
+                            <div class="mb-3 d-flex align-items-center justify-content-between">
+                                <input class="form-control form-control-sm" type="file" id="imageUpload" name="image"
+                                    accept=".jpg, .png" style="width: 225px;">
+                                <button type="submit" class="btn custom-btn btn-sm ms-auto"
+                                    style="width: 100px;">Post</button>
+                            </div>
+                            <input type="hidden" name="edit" value=False>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if error_message%}
+    <div class="form-group">
+        <h4 class="h4 mb-3 font-weight-normal text-center" style="margin-top: 15px; color:#f13333">{{ error_message }}
+        </h4>
+    </div>
+    {% endif %}
+    {% if message%}
+    <div class="form-group">
+        <h4 class="h4 mb-3 font-weight-normal text-center" style="margin-top: 15px; color:#657786">{{ message }}
+        </h4>
+    </div>
+    {% endif %}
+    {% if tweets %}
+    <div class="container mt-5 justify-content-center">
+        <div class="result-header">
+            <h4 class="text-center" style="color: #657786;">Latest tweets</h4>
+        </div>
+        <!-- Example search result for a user -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {% for tweet in tweets %}
+                    <div class="p-3 mb-3 border rounded bg-light">
+                        <small class="d-flex justify-content-between">
+                            <span style="color: #657786;">@{{ tweet.username }}</span>
+                            <span style="color: #657786;">{{ tweet.date }}</span>
+                        </small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                {% if tweet.image != "" %}
+                                <img src="{{ tweet.image }}" alt="Tweet Image"
+                                    style="max-width: 200px; max-height: 200px; margin-right: 15px;">
+                                {% endif %}
+                                <p style="color: #657786;">{{ tweet.content }}</p>
+                            </div>
+                            {% if username == tweet.username %}
+                            <form action="/edit-tweet" method="POST" class="mb-0">
+                                <!-- Hidden inputs for tweet content, ID, and username -->
+                                <input type="hidden" name="tweet_id" value="{{ tweet.id }}">
+                                <input type="hidden" name="tweet_content" value="{{ tweet.content }}">
+                                <input type="hidden" name="username" value="{{ username }}">
+                                {% if tweet.image != "" %}
+                                <input value="{{ tweet.image }}" name="image" type="hidden">
+                                {% endif %}
+                                <!-- Edit button -->
+                                <button type="submit" class="btn custom-btn-edit ms-3">Edit</button>
+                            </form>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
